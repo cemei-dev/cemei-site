@@ -72,7 +72,9 @@ export const UploadArea = ({
         ) : isUploadSuccess && !fileTypeError ? (
           <div className="flex flex-col items-center justify-between gap-2">
             <FaFile color="#BEA7DA" size={52} />
-            <span className="line-clamp-2 max-w-[300px] text-purple-400">{fileName}</span>
+            <span className="line-clamp-2 max-w-[300px] text-purple-400">
+              {fileName}
+            </span>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
