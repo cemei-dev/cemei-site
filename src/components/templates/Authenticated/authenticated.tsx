@@ -16,8 +16,11 @@ function AuthenticatedOnlyFeature({ children }: Props): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {
-    if (userUid === "") {
+    if (userUid === "" || userUid === "undefined") {
       router.push(`/login`);
+    } else if (userUid && userUid !== "" && userUid !== "undefined") {
+      // If userUid is not set, redirect to login
+      router.push(`/home`);
     }
   }, [userUid, router]);
 

@@ -15,7 +15,7 @@ import {
   recoverPassword,
   signInWithEmailAndPasswordLocal
 } from "@/store/services/auth";
-import { deleteUserDoc, waitForUser } from "@/store/services/user";
+import { deleteUserDoc } from "@/store/services/user";
 
 import AuthContext from "./context";
 
@@ -43,12 +43,14 @@ const AuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setLoading((prev) => ({ ...prev, onAuthUserChanged: true }));
+
       if (user) {
         setUserUid(user.uid);
       } else {
         setUserUid("");
       }
-      setLoading((prev) => ({ ...prev, onAuthUserChanged: true }));
+      setLoading((prev) => ({ ...prev, onAuthUserChanged: false }));
     });
 
     return () => unsubscribe();
@@ -60,12 +62,7 @@ const AuthProvider = ({ children }: Props) => {
       email,
       password
     );
-    if (user && !user?.emailVerified) {
-      errorToast("Por favor verifique seu email");
-      setLoading((prev) => ({ ...prev, loginWithInternalService: false }));
-      logout();
-      return;
-    }
+    console.log("User logged in:", user);
     if (user) {
       successToast("Bem vindo de volta!");
       setUserUid(user.uid);
@@ -78,14 +75,10 @@ const AuthProvider = ({ children }: Props) => {
 
   const waitForUserSync = async () => {
     setLoading((prev) => ({ ...prev, onAuthUserChanged: true }));
-    await waitForUser(async (userCred) => {
-      if (userCred && !userCred?.emailVerified) {
-        logout();
-        setLoading((prev) => ({ ...prev, onAuthUserChanged: false }));
-      }
-    });
+    // Wait for the user to be authenticated if needed
     setLoading((prev) => ({ ...prev, onAuthUserChanged: false }));
   };
+
   const forgotPassword = async (email: string) => {
     setLoading((prev) => ({ ...prev, forgotPassword: true }));
     const { error } = await recoverPassword(email);
@@ -111,6 +104,7 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   const logoutUser = async () => {
+    console.log("Logging out user");
     setLoading((prev) => ({ ...prev, logout: true }));
     router.push("/login");
     setUserUid("");
