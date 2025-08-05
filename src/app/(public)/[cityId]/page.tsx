@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import LoadingComponent from "@/components/atoms/Loading/loading";
 import Select from "@/components/atoms/Select/select";
 import AxisSection from "@/components/molecules/AxisSection/axisSection";
+import CityInvestmentSection from "@/components/molecules/CityInvestmentSection/cityInvestmentSection";
 import Footer from "@/components/molecules/Footer/footer";
 import PublicAccomplishmentSection from "@/components/molecules/PublicAccomplishmentSection/publicAccomplishmentSection";
 import PublicEventsSection from "@/components/molecules/PublicEventsSection/publicEventsSection";
@@ -15,13 +16,12 @@ import PublicVideosSection from "@/components/molecules/PublicVideosSection/publ
 import PublicNewsSection from "@/components/PublicNewsSection/publicNewsSection";
 import { useGetAllCities } from "@/hooks/queries/useGetAllCities";
 import useGetCityById from "@/hooks/queries/useGetCityBtId";
-import CityInvestmentSection from "@/components/molecules/CityInvestmentSection/cityInvestmentSection";
 import useGetInvestmentsByCity from "@/hooks/queries/useGetInvestmentsByCity";
 
 export default function CityPage() {
   const { cityId } = useParams() as { cityId: string };
   const { data: city } = useGetCityById(cityId);
-  const {data: investments} = useGetInvestmentsByCity(cityId);
+  const { data: investments } = useGetInvestmentsByCity(cityId);
   const router = useRouter();
 
   const { data: allCities } = useGetAllCities();
