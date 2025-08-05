@@ -15,10 +15,13 @@ import PublicVideosSection from "@/components/molecules/PublicVideosSection/publ
 import PublicNewsSection from "@/components/PublicNewsSection/publicNewsSection";
 import { useGetAllCities } from "@/hooks/queries/useGetAllCities";
 import useGetCityById from "@/hooks/queries/useGetCityBtId";
+import CityInvestmentSection from "@/components/molecules/CityInvestmentSection/cityInvestmentSection";
+import useGetInvestmentsByCity from "@/hooks/queries/useGetInvestmentsByCity";
 
 export default function CityPage() {
   const { cityId } = useParams() as { cityId: string };
   const { data: city } = useGetCityById(cityId);
+  const {data: investments} = useGetInvestmentsByCity(cityId);
   const router = useRouter();
 
   const { data: allCities } = useGetAllCities();
@@ -73,6 +76,7 @@ export default function CityPage() {
           height={1000}
           className="absolute bottom-[25%] right-0 -z-20 object-cover"
         />
+        <CityInvestmentSection investments={investments ?? []} />
         <PublicNewsSection cityId={cityId} cityName={city?.name || ""} />
         <PublicEventsSection cityId={cityId} />
         <PublicVideosSection cityId={cityId} />
