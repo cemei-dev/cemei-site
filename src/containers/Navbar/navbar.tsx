@@ -71,12 +71,13 @@ export default function Navbar({ menuItems }: NavbarProps) {
   return (
     <nav className="fixed top-0 z-50 flex h-32 w-full items-center justify-between bg-purple-1000 px-14">
       <div className="flex h-full items-center gap-3">
-        <div className="flex flex-col items-center">
-          <span className="text-3xl font-bold text-white">Observatório da</span>
-          <span className="text-3xl font-bold text-white">
-            Igualdade Educativa
-          </span>
-        </div>
+        <Image
+          src="/images/logo.png"
+          alt="Logo CEMEI"
+          width={160}
+          height={40}
+          className="object-contain"
+        />
         <Link href="/" className="relative h-6 w-32 cursor-pointer">
           <Image
             src="/images/logo-cemei.svg"

@@ -14,19 +14,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const AuthMenuItems = [
     {
       label: `Principais notícias`,
-      href: "/d"
+      href: "/news"
     },
     {
       label: `Realizações da prefeitura`,
-      href: "/b"
+      href: "/accomplishment"
     },
     {
       label: `Eventos`,
-      href: "/a"
+      href: "/events"
     },
     {
       label: `Vídeos`,
-      href: "/c"
+      href: "/videos"
     },
     {
       label: `${city.data?.name}`,
