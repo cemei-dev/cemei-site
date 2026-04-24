@@ -13,6 +13,17 @@ function formatPrivateKey(key: string) {
 }
 
 export function createFirebaseAdminApp(params: FirebaseAdminAppParams) {
+  if (
+    !params.projectId ||
+    !params.clientEmail ||
+    !params.privateKey ||
+    !params.storageBucket
+  ) {
+    throw new Error(
+      "Credenciais do Firebase Admin incompletas no servidor. Verifique FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_ADMIN_PRIVATE_KEY e FIREBASE_STORAGE_BUCKET."
+    );
+  }
+
   const privateKey = formatPrivateKey(params.privateKey);
 
   if (admin.apps.length > 0) {
@@ -33,11 +44,27 @@ export function createFirebaseAdminApp(params: FirebaseAdminAppParams) {
 }
 
 export async function initAdmin() {
+  const projectId =
+    process.env.FIREBASE_PROJECT_ID ||
+    process.env.GOOGLE_CLOUD_PROJECT ||
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+  const clientEmail =
+    process.env.FIREBASE_CLIENT_EMAIL ||
+    process.env.GOOGLE_CLOUD_CLIENT_EMAIL ||
+    process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL;
+  const storageBucket =
+    process.env.FIREBASE_STORAGE_BUCKET ||
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  const privateKey =
+    process.env.FIREBASE_ADMIN_PRIVATE_KEY ||
+    process.env.GOOGLE_CLOUD_PRIVATE_KEY ||
+    process.env.NEXT_PUBLIC_FIREBASE_ADMIN_PRIVATE_KEY;
+
   const params = {
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID as string,
-    clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL as string,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET as string,
-    privateKey: process.env.NEXT_PUBLIC_FIREBASE_ADMIN_PRIVATE_KEY as string
+    projectId: projectId as string,
+    clientEmail: clientEmail as string,
+    storageBucket: storageBucket as string,
+    privateKey: privateKey as string
   };
 
   return createFirebaseAdminApp(params);

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-import { GoogleGenAI } from "@google/genai";
 import { Send } from "lucide-react";
 import mammoth from "mammoth";
 import * as pdfjs from "pdfjs-dist";
@@ -17,10 +16,18 @@ type ChatContent = {
   content: string | React.ReactNode;
 };
 
+type GeminiMessage = {
+  role: "user" | "model";
+  parts: Array<{ text: string }>;
+};
+
 export default function AIChat({ file }: { file: File }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
+  const MODEL_NAME = process.env.NEXT_PUBLIC_GEMINI_MODEL || "gemini-2.5-flash";
+  const MAX_FILE_CHARS = 45000;
+  const RETRY_DELAYS_MS = [1200, 2500, 5000];
   const [chatHistory, setChatHistory] = useState<ChatContent[]>([
     {
       role: "user",
@@ -48,13 +55,13 @@ export default function AIChat({ file }: { file: File }) {
   }) => {
     try {
       // Converte o histórico para o formato esperado pelo Gemini
-      const messages = history.map(({ role, content }) => ({
+      const messages: GeminiMessage[] = history.map(({ role, content }) => ({
         role: role === "user" ? "user" : "model",
         parts: [{ text: typeof content === "string" ? content : "" }]
       }));
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+      const response = await generateContentWithRetry({
+        model: MODEL_NAME,
         contents: messages
       });
 
@@ -75,16 +82,138 @@ export default function AIChat({ file }: { file: File }) {
         ...history,
         {
           role: "chat",
-          content:
-            "Desculpe, não foi possível gerar uma resposta. Por favor, tente novamente."
+          content: getFriendlyErrorMessage(
+            "Desculpe, não foi possível gerar uma resposta. Por favor, tente novamente.",
+            error
+          )
         }
       ]);
     }
   };
 
-  const ai = new GoogleGenAI({
-    apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY
-  });
+  const sleep = (ms: number) =>
+    new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+
+  const isRateLimitError = (error: unknown) => {
+    if (!error || typeof error !== "object") return false;
+
+    const errorStatus = (error as { status?: number | string }).status;
+    const errorMessage = (error as { message?: string }).message ?? "";
+    const statusText = String(errorStatus ?? "").toLowerCase();
+    const messageText = errorMessage.toLowerCase();
+
+    return (
+      statusText === "429" ||
+      messageText.includes("resource_exhausted") ||
+      messageText.includes("too many requests")
+    );
+  };
+
+  const getFriendlyErrorMessage = (fallback: string, error: unknown) => {
+    if (error instanceof Error) {
+      const errorMessage = error.message.toLowerCase();
+
+      if (errorMessage.includes("api_key_service_blocked")) {
+        return "A chave de API está bloqueada para este método no Vertex AI. Verifique as restrições da chave no Google Cloud.";
+      }
+
+      if (errorMessage.includes("permission_denied")) {
+        return "A requisição foi negada por permissão no Vertex AI. Confira as restrições da chave e a API habilitada no projeto.";
+      }
+
+      if (
+        errorMessage.includes("api key expired") ||
+        errorMessage.includes("api_key_invalid")
+      ) {
+        return "A chave de API informada está inválida ou expirada. Atualize a chave no ambiente e reinicie a aplicação.";
+      }
+
+      if (
+        errorMessage.includes("credentials_missing") ||
+        errorMessage.includes("unauthenticated")
+      ) {
+        return "A credencial do servidor para o Vertex AI está ausente ou inválida. Verifique a service account no backend.";
+      }
+    }
+
+    if (isRateLimitError(error)) {
+      return "O limite de uso da IA foi atingido no momento. Aguarde alguns segundos e tente novamente.";
+    }
+
+    return fallback;
+  };
+
+  const normalizeToVertexContents = (
+    contents: string | GeminiMessage[]
+  ): GeminiMessage[] => {
+    if (typeof contents === "string") {
+      return [
+        {
+          role: "user",
+          parts: [{ text: contents }]
+        }
+      ];
+    }
+
+    return contents;
+  };
+
+  const generateContentWithRetry = async ({
+    model,
+    contents
+  }: {
+    model: string;
+    contents: string | GeminiMessage[];
+  }) => {
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+      try {
+        const response = await fetch("/api/ai/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model,
+            contents: normalizeToVertexContents(contents)
+          })
+        });
+
+        const payload = (await response.json()) as {
+          text?: string;
+          error?: string;
+          details?: unknown;
+        };
+
+        if (!response.ok) {
+          throw new Error(
+            JSON.stringify({
+              status: response.status,
+              error: payload.error,
+              details: payload.details
+            })
+          );
+        }
+
+        return {
+          text: payload.text || ""
+        };
+      } catch (error) {
+        lastError = error;
+
+        if (!isRateLimitError(error) || attempt === RETRY_DELAYS_MS.length) {
+          throw error;
+        }
+
+        await sleep(RETRY_DELAYS_MS[attempt]);
+      }
+    }
+
+    throw lastError;
+  };
 
   interface GeminiResponse {
     text: string;
@@ -141,17 +270,24 @@ export default function AIChat({ file }: { file: File }) {
   const FirstResponse = async (file: File): Promise<GeminiResponse> => {
     try {
       const fileContent = await extractTextFromFile(file);
+      const truncatedFileContent =
+        fileContent.length > MAX_FILE_CHARS
+          ? `${fileContent.slice(0, MAX_FILE_CHARS)}\n\n[Conteudo truncado automaticamente para evitar limite da API.]`
+          : fileContent;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: `Aqui está o conteúdo do arquivo ${file.name}:\n\n${fileContent}\n\nEm português, explique de forma resumida o arquivo que está sendo enviado, em tópicos e com uma linguagem acessível. (Omita essa parte, apenas retorne o resumo em português). Não utilize asteriscos para destacar, mas sim use a tag <strong>. (repetindo, não use **, quando quiser destacar, use a tag html <strong >. em palavras **assim**, substitua por <strong>assim</strong>!) você pode usar a tag <br> para quebrar a linha. Você pode usar emojis para separar esses tópicos quebrando as linhas e adicionando espaços. Também não utilize renderizações de tabelas, opte sempre por tópicos.`
+      const response = await generateContentWithRetry({
+        model: MODEL_NAME,
+        contents: `Aqui está o conteúdo do arquivo ${file.name}:\n\n${truncatedFileContent}\n\nEm português, explique de forma resumida o arquivo que está sendo enviado, em tópicos e com uma linguagem acessível. (Omita essa parte, apenas retorne o resumo em português). Não utilize asteriscos para destacar, mas sim use a tag <strong>. (repetindo, não use **, quando quiser destacar, use a tag html <strong >. em palavras **assim**, substitua por <strong>assim</strong>!) você pode usar a tag <br> para quebrar a linha. Você pode usar emojis para separar esses tópicos quebrando as linhas e adicionando espaços. Também não utilize renderizações de tabelas, opte sempre por tópicos.`
       });
 
       return response as GeminiResponse;
     } catch (error) {
       console.error("Erro ao processar o arquivo:", error);
       throw new Error(
-        "Não foi possível processar o arquivo. Por favor, tente novamente."
+        getFriendlyErrorMessage(
+          "Não foi possível processar o arquivo. Por favor, tente novamente.",
+          error
+        )
       );
     }
   };
@@ -180,8 +316,10 @@ export default function AIChat({ file }: { file: File }) {
             },
             {
               role: "chat",
-              content:
-                "Desculpe, não foi possível analisar o arquivo. Por favor, tente novamente."
+              content: getFriendlyErrorMessage(
+                "Desculpe, não foi possível analisar o arquivo. Por favor, tente novamente.",
+                error
+              )
             }
           ]);
         });
@@ -238,8 +376,10 @@ export default function AIChat({ file }: { file: File }) {
         },
         {
           role: "chat",
-          content:
-            "Desculpe, não foi possível analisar o arquivo. Por favor, tente novamente."
+          content: getFriendlyErrorMessage(
+            "Desculpe, não foi possível analisar o arquivo. Por favor, tente novamente.",
+            error
+          )
         }
       ]);
     }
