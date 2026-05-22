@@ -31,13 +31,15 @@ function calculateHeight(width: number) {
   return height;
 }
 
+const LOGIN_URL = "https://cemei.vercel.app/login";
+
 export const TemplateEmail = ({
   preview,
   paragraphs,
   hasNotificationExplanation = true,
   redirectButtonData = {
-    label: "Ir pra login ",
-    href: "https://cemei.vercel.app/"
+    label: "Acessar o sistema",
+    href: LOGIN_URL
   },
   width = 800
 }: Temp) => {
