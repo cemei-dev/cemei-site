@@ -37,7 +37,7 @@ export const TemplateEmail = ({
   hasNotificationExplanation = true,
   redirectButtonData = {
     label: "Ir pra login ",
-    href: process.env.NEXT_PUBLIC_GLOBAL_URL + "/login"
+    href: "https://cemei.vercel.app/"
   },
   width = 800
 }: Temp) => {
