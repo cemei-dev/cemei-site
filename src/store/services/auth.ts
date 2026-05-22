@@ -16,13 +16,17 @@ import {
 
 import firebaseApp from "@/config/firebase";
 
-const auth = getAuth(firebaseApp);
+const LOGIN_URL = "https://cemei.vercel.app/login";
+
+const getFirebaseAuth = () => getAuth(firebaseApp);
 
 export const waitForUser = (callback: (user: User | null) => void) => {
+  const auth = getFirebaseAuth();
   return auth.onAuthStateChanged(callback);
 };
 
 export const loginWithGoogle = async () => {
+  const auth = getFirebaseAuth();
   try {
     const userCred = await signInWithPopup(auth, new GoogleAuthProvider());
     return {
@@ -38,6 +42,7 @@ export const loginWithGoogle = async () => {
 };
 
 export const loginWithFacebook = async () => {
+  const auth = getFirebaseAuth();
   try {
     const userCred = await signInWithPopup(auth, new FacebookAuthProvider());
     return {
@@ -56,6 +61,7 @@ export const createUserWithEmailAndPasswordLocal = async (
   email: string,
   password: string
 ) => {
+  const auth = getFirebaseAuth();
   try {
     const userCred = await createUserWithEmailAndPassword(
       auth,
@@ -63,7 +69,7 @@ export const createUserWithEmailAndPasswordLocal = async (
       password
     );
     await sendEmailVerification(userCred.user, {
-      url: String(process.env.NEXT_PUBLIC_LOGIN_URL)
+      url: process.env.NEXT_PUBLIC_LOGIN_URL ?? LOGIN_URL
     });
     return {
       user: userCred.user,
@@ -81,6 +87,7 @@ export const signInWithEmailAndPasswordLocal = async (
   email: string,
   password: string
 ) => {
+  const auth = getFirebaseAuth();
   try {
     const userCred = await signInWithEmailAndPassword(auth, email, password);
     return { user: userCred.user, error: null };
@@ -90,9 +97,10 @@ export const signInWithEmailAndPasswordLocal = async (
 };
 
 export const recoverPassword = async (email: string) => {
+  const auth = getFirebaseAuth();
   try {
     await sendPasswordResetEmail(auth, email, {
-      url: String(process.env.NEXT_PUBLIC_LOGIN_URL)
+      url: process.env.NEXT_PUBLIC_LOGIN_URL ?? LOGIN_URL
     });
     return { error: null };
   } catch (error: any) {
@@ -101,6 +109,7 @@ export const recoverPassword = async (email: string) => {
 };
 
 export const deleteOwnAccount = async () => {
+  const auth = getFirebaseAuth();
   if (auth.currentUser !== null) {
     try {
       await deleteUser(auth.currentUser);
@@ -112,6 +121,7 @@ export const deleteOwnAccount = async () => {
 };
 
 export const updatePassword = async (password: string) => {
+  const auth = getFirebaseAuth();
   if (auth.currentUser !== null) {
     try {
       await updatePasswordFirebase(auth.currentUser, password);
@@ -123,5 +133,6 @@ export const updatePassword = async (password: string) => {
 };
 
 export const logout = async () => {
+  const auth = getFirebaseAuth();
   await signOut(auth);
 };
