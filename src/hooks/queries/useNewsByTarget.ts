@@ -15,13 +15,13 @@ export const getNewsByTargetQueryFn = (target: string) => {
 
 export const useGetNewsByTarget = <T = NewsEntity[]>(
   target: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getNewsByTargetQueryKey(target),
     queryFn: getNewsByTargetQueryFn(target),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

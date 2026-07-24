@@ -19,7 +19,7 @@ const useAllUsers = <T = UserEntity[]>(select?: (data: DocumentData) => T) => {
     queryFn: getAllUsersQueryFn(),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
 
@@ -32,14 +32,14 @@ export const getAllManagersQueryFn = () => {
 };
 
 export const useAllManagers = <T = UserEntity[]>(
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getAllManagersQueryKey(),
     queryFn: getAllManagersQueryFn(),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
 

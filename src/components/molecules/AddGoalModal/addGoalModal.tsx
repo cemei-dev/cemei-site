@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { addGoal } from "@/store/services/goal";
@@ -25,7 +25,7 @@ import TextAreaField from "../TextareaField/textareaField";
 export default function AddGoalModal({
   isOpen,
   setIsOpen,
-  axisId,
+  axisId
 }: AddGoalModalProps) {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
@@ -34,11 +34,11 @@ export default function AddGoalModal({
     register,
     reset,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid }
   } = useForm<AddGoalForm>({
     mode: "all",
     resolver: zodResolver(AddGoalSchema),
-    criteriaMode: "all",
+    criteriaMode: "all"
   });
 
   const addMutation = useMutation(
@@ -47,7 +47,7 @@ export default function AddGoalModal({
         await addGoal({
           text: data.text,
           number: data.number,
-          educationalAxisId: axisId,
+          educationalAxisId: axisId
         });
       } catch (error) {
         console.error("Goal registration error:", error);
@@ -64,8 +64,8 @@ export default function AddGoalModal({
       },
       onError: () => {
         setLoading(false);
-      },
-    },
+      }
+    }
   );
 
   const onSubmit = (data: AddGoalForm) => {

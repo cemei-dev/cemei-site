@@ -14,13 +14,13 @@ export const getCitiesQueryFn = () => {
 };
 
 export const useGetAllCities = <T = CityEntity[]>(
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getCitiesQueryKey(),
     queryFn: getCitiesQueryFn(),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

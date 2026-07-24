@@ -14,13 +14,13 @@ export const getEventsQueryFn = () => {
 };
 
 export const useGetAllEvents = <T = EventEntity[]>(
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getEventsQueryKey(),
     queryFn: getEventsQueryFn(),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

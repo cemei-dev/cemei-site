@@ -14,13 +14,13 @@ export const getAllAxisQueryFn = () => {
 };
 
 export const useAllAxis = <T = EducationalAxisEntity[]>(
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getAllAxisQueryKey(),
     queryFn: getAllAxisQueryFn(),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

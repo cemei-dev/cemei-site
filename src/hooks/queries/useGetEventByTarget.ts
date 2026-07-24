@@ -15,14 +15,14 @@ export const getEventQueryFn = (target: string) => {
 
 const useGetEventByTarget = <T = EventEntity[]>(
   target: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getEventQueryKey(target),
     queryFn: getEventQueryFn(target),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
 

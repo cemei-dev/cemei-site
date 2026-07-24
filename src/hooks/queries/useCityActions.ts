@@ -15,13 +15,13 @@ export const getCityActionsQueryFn = (cityId: string) => {
 
 export const useCityActions = <T = ActionEntity[]>(
   cityId: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getCityActionsQueryKey(cityId),
     queryFn: getCityActionsQueryFn(cityId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

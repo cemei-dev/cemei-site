@@ -15,14 +15,14 @@ export const getProfileQueryFn = (uid: string) => {
 
 const useProfile = <T = UserEntity>(
   uid: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getProfileQueryKey(uid),
     queryFn: getProfileQueryFn(uid),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
 

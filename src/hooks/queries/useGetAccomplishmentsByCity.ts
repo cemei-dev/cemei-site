@@ -15,14 +15,14 @@ export const getAccomplishmentQueryFn = (cityId: string) => {
 
 const useGetAccomplishmentByCity = <T = AccomplishmentEntity[]>(
   cityId: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getAccomplishmentQueryKey(cityId),
     queryFn: getAccomplishmentQueryFn(cityId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
 

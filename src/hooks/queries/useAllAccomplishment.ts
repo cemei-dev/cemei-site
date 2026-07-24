@@ -14,13 +14,13 @@ export const getAccomplishmentQueryFn = () => {
 };
 
 export const useGetAllAccomplishment = <T = AccomplishmentEntity[]>(
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getAccomplishmentQueryKey(),
     queryFn: getAccomplishmentQueryFn(),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

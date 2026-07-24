@@ -12,7 +12,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useCityGoalStrategies } from "@/hooks/queries/useAllCityGoalStrategies";
 import { useCityActions } from "@/hooks/queries/useCityActions";
@@ -27,7 +27,7 @@ import StrategyCard from "../StrategyCard/strategyCard";
 export default function GoalCard({
   goal,
   index,
-  cityId,
+  cityId
 }: {
   goal: GoalEntity;
   index: number;
@@ -38,19 +38,19 @@ export default function GoalCard({
   const goalActions = actions?.filter((action) => action.goalId === goal.id);
   const [search, setSearch] = useState("");
   const filteredStrategies = strategies?.filter((strategy) =>
-    strategy.title.toLowerCase().includes(search.toLowerCase()),
+    strategy.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const doneActions = goalActions?.filter(
-    (action) => action.status === "completed",
+    (action) => action.status === "completed"
   ).length;
 
   const incompletedActions = goalActions?.filter(
-    (action) => action.status === "incomplete",
+    (action) => action.status === "incomplete"
   ).length;
 
   const notStartedActions = goalActions?.filter(
-    (action) => action.status === "not_started",
+    (action) => action.status === "not_started"
   ).length;
 
   const totalActions = goalActions?.length;
@@ -81,8 +81,8 @@ export default function GoalCard({
         successToast("Meta deletada com sucesso.");
         setDeleteLoading(false);
         setIsDeleteModalOpen(false);
-      },
-    },
+      }
+    }
   );
 
   if (!strategies) return <LoadingComponent />;
@@ -147,18 +147,18 @@ export default function GoalCard({
                 {
                   browser: `Ações completas`,
                   visitors: doneActions ?? 0,
-                  fill: "#33B1E4",
+                  fill: "#33B1E4"
                 },
                 {
                   browser: `Ações em andamento`,
                   visitors: incompletedActions ?? 0,
-                  fill: "#FDC139",
+                  fill: "#FDC139"
                 },
                 {
                   browser: `Ações não iniciadas`,
                   visitors: notStartedActions ?? 0,
-                  fill: "#F455BD",
-                },
+                  fill: "#F455BD"
+                }
               ]}
             />
           </div>

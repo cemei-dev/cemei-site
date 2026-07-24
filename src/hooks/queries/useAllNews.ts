@@ -14,13 +14,13 @@ export const getNewsQueryFn = () => {
 };
 
 export const useGetAllNews = <T = NewsEntity[]>(
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getNewsQueryKey(),
     queryFn: getNewsQueryFn(),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

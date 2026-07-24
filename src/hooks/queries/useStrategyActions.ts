@@ -15,13 +15,13 @@ export const getStrategyActionsQueryFn = (strategyId: string) => {
 
 export const useStrategyActions = <T = ActionEntity[]>(
   strategyId: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getStrategyActionsQueryKey(strategyId),
     queryFn: getStrategyActionsQueryFn(strategyId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

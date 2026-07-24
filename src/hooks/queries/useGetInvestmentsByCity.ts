@@ -15,14 +15,14 @@ export const getInvestmentsQueryFn = (cityId: string) => {
 
 const useGetInvestmentsByCity = <T = InvestmentEntity[]>(
   cityId: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getInvestmentsQueryKey(cityId),
     queryFn: getInvestmentsQueryFn(cityId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
 

@@ -14,14 +14,14 @@ export const getActionQueryFn = (actionId: string) => {
 
 const useAction = <T = ActionEntity>(
   actionId: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getActionQueryKey(actionId),
     queryFn: getActionQueryFn(actionId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
 

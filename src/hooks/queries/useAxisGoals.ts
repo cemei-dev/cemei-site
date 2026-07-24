@@ -15,13 +15,13 @@ export const getAxisGoalsQueryFn = (axisId: string) => {
 
 export const useAxisGoals = <T = GoalEntity[]>(
   axisId: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getAxisGoalsQueryKey(axisId),
     queryFn: getAxisGoalsQueryFn(axisId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };

@@ -15,13 +15,13 @@ export const getActionResultsQueryFn = (actionId: string) => {
 
 export const useActionResults = <T = ResultEntity[]>(
   actionId: string,
-  select?: (data: DocumentData) => T,
+  select?: (data: DocumentData) => T
 ) => {
   return useQuery({
     queryKey: getActionResultsQueryKey(actionId),
     queryFn: getActionResultsQueryFn(actionId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS,
+    cacheTime: ONE_DAY_IN_MS
   });
 };
