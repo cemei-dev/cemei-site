@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { NewsEntity } from "@/common/entities/news";
 import { getNewsByTarget } from "@/store/services/news";
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export const getNewsByTargetQueryKey = (target: string) => {
   return ["news", target];
@@ -24,7 +21,7 @@ export const useGetNewsByTarget = <T = NewsEntity[]>(
     queryKey: getNewsByTargetQueryKey(target),
     queryFn: getNewsByTargetQueryFn(target),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

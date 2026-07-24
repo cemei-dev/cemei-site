@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { DocumentData } from "firebase/firestore";
 
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@/common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@/common/constants/generic";
 import { EducationalAxisEntity } from "@/common/entities/educationalAxis";
 import { getAllEducationalAxis } from "@/store/services/educationalAxis";
 
@@ -23,7 +20,7 @@ export const useAllAxis = <T = EducationalAxisEntity[]>(
     queryKey: getAllAxisQueryKey(),
     queryFn: getAllAxisQueryFn(),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

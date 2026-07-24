@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 
-import { ChevronLeft, RefreshCcw } from "lucide-react";
+import { ChevronLeft, Plus, RefreshCcw } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 import Button from "@/components/atoms/Button/button";
 import Select from "@/components/atoms/Select/select";
+import AddGoalModal from "@/components/molecules/AddGoalModal/addGoalModal";
 import GoalCard from "@/components/molecules/GoalCard/goalCard";
 import { useAllAxis } from "@/hooks/queries/useAllAxis";
 import { useAxisGoals } from "@/hooks/queries/useAxisGoals";
@@ -22,6 +23,13 @@ export default function AxisPage() {
   const { userUid } = useAuth();
   const { data: user } = useProfile(userUid);
   const [isRotating, setIsRotating] = useState(false);
+  const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
+
+  // ponytail: sort by the meta's own number so municípios aren't locked into 1,2,3 creation order; goals without a number fall to the end
+  const sortedGoals = goals
+    ? [...goals].sort((a, b) => (a.number ?? Infinity) - (b.number ?? Infinity))
+    : [];
+
   return (
     <div className="flex h-full w-full flex-col items-start justify-start gap-20 pt-14">
       <div className="flex w-full justify-between">
@@ -48,23 +56,28 @@ export default function AxisPage() {
             />
           </Button>
         </div>
-        <Select
-          className="h-max w-max"
-          options={
-            allAxis?.map((axis) => ({
-              label: axis.name,
-              value: axis.id
-            })) ?? []
-          }
-          value={currentAxis?.id || ""}
-          onChange={(value) => {
-            router.push(`/home/${value}`);
-          }}
-        />
+        <div className="flex items-center gap-4">
+          <Select
+            className="h-max w-max"
+            options={
+              allAxis?.map((axis) => ({
+                label: axis.name,
+                value: axis.id
+              })) ?? []
+            }
+            value={currentAxis?.id || ""}
+            onChange={(value) => {
+              router.push(`/home/${value}`);
+            }}
+          />
+          <Button onClick={() => setIsAddGoalOpen(true)} suffix={<Plus />}>
+            Adicionar nova meta
+          </Button>
+        </div>
       </div>
       <div className="flex w-full flex-col gap-8">
-        {goals && goals.length && goals.length > 0 ? (
-          goals?.map((goal, index) => (
+        {sortedGoals.length > 0 ? (
+          sortedGoals.map((goal, index) => (
             <GoalCard
               key={goal.id}
               goal={goal}
@@ -80,6 +93,11 @@ export default function AxisPage() {
           </div>
         )}
       </div>
+      <AddGoalModal
+        isOpen={isAddGoalOpen}
+        setIsOpen={setIsAddGoalOpen}
+        axisId={axisId as string}
+      />
     </div>
   );
 }

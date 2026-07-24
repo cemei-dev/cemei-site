@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DocumentData } from "firebase/firestore";
 
 import { getAllManagers, getAllUsers } from "@/store/services/user";
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@common/constants/generic";
 import type { UserEntity } from "@common/entities/user";
 
 export function getAllUsersQueryKey() {
@@ -21,7 +18,7 @@ const useAllUsers = <T = UserEntity[]>(select?: (data: DocumentData) => T) => {
     queryKey: getAllUsersQueryKey(),
     queryFn: getAllUsersQueryFn(),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };
@@ -41,7 +38,7 @@ export const useAllManagers = <T = UserEntity[]>(
     queryKey: getAllManagersQueryKey(),
     queryFn: getAllManagersQueryFn(),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

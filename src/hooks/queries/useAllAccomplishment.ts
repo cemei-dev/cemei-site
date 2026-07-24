@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { AccomplishmentEntity } from "@/common/entities/accomplishment";
 import { getAllAccomplishment } from "@/store/services/accomplishment";
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export const getAccomplishmentQueryKey = () => {
   return ["accomplishment"];
@@ -23,7 +20,7 @@ export const useGetAllAccomplishment = <T = AccomplishmentEntity[]>(
     queryKey: getAccomplishmentQueryKey(),
     queryFn: getAccomplishmentQueryFn(),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };
