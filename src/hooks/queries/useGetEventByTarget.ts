@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DocumentData } from "firebase/firestore";
 
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  ONE_MINUTE_IN_MS,
   ONE_DAY_IN_MS
 } from "@/common/constants/generic";
 import { EventEntity } from "@/common/entities/event";
@@ -24,7 +24,7 @@ const useGetEventByTarget = <T = EventEntity[]>(
     queryKey: getEventQueryKey(target),
     queryFn: getEventQueryFn(target),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

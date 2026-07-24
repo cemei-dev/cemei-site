@@ -4,7 +4,7 @@ import { DocumentData } from "firebase/firestore";
 import { EventEntity } from "@/common/entities/event";
 import { getAllEvents } from "@/store/services/event";
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  ONE_MINUTE_IN_MS,
   ONE_DAY_IN_MS
 } from "@common/constants/generic";
 
@@ -23,7 +23,7 @@ export const useGetAllEvents = <T = EventEntity[]>(
     queryKey: getEventsQueryKey(),
     queryFn: getEventsQueryFn(),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

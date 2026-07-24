@@ -3,7 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { getCityById } from "@/store/services/city";
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  ONE_MINUTE_IN_MS,
   ONE_DAY_IN_MS
 } from "@common/constants/generic";
 import type { CityEntity } from "@common/entities/city";
@@ -24,7 +24,7 @@ const useGetCityById = <T = CityEntity>(
     queryKey: getCityQueryKey(cityId),
     queryFn: getCityQueryFn(cityId),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

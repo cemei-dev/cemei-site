@@ -4,7 +4,7 @@ import { DocumentData } from "firebase/firestore";
 import { AccomplishmentEntity } from "@/common/entities/accomplishment";
 import { getAccomplishmentsByCity } from "@/store/services/accomplishment";
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  ONE_MINUTE_IN_MS,
   ONE_DAY_IN_MS
 } from "@common/constants/generic";
 
@@ -24,7 +24,7 @@ const useGetAccomplishmentByCity = <T = AccomplishmentEntity[]>(
     queryKey: getAccomplishmentQueryKey(cityId),
     queryFn: getAccomplishmentQueryFn(cityId),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

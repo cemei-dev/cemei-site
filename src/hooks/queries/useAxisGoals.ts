@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DocumentData } from "firebase/firestore";
 
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  ONE_MINUTE_IN_MS,
   ONE_DAY_IN_MS
 } from "@/common/constants/generic";
 import { GoalEntity } from "@/common/entities/goal";
@@ -24,7 +24,7 @@ export const useAxisGoals = <T = GoalEntity[]>(
     queryKey: getAxisGoalsQueryKey(axisId),
     queryFn: getAxisGoalsQueryFn(axisId),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

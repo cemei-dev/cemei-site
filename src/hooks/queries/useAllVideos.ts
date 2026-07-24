@@ -4,7 +4,7 @@ import { DocumentData } from "firebase/firestore";
 import { VideoEntity } from "@/common/entities/vide";
 import { getAllVideos } from "@/store/services/video";
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  ONE_MINUTE_IN_MS,
   ONE_DAY_IN_MS
 } from "@common/constants/generic";
 
@@ -23,7 +23,7 @@ export const useGetAllVideos = <T = VideoEntity[]>(
     queryKey: getVideosQueryKey(),
     queryFn: getVideosQueryFn(),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

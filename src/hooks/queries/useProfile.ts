@@ -3,7 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { getUserDoc } from "@/store/services/user";
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  ONE_MINUTE_IN_MS,
   ONE_DAY_IN_MS
 } from "@common/constants/generic";
 import type { UserEntity } from "@common/entities/user";
@@ -24,7 +24,7 @@ const useProfile = <T = UserEntity>(
     queryKey: getProfileQueryKey(uid),
     queryFn: getProfileQueryFn(uid),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: ONE_MINUTE_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };
