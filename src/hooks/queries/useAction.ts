@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { ActionEntity } from "@/common/entities/action";
 import { getAction } from "@/store/services/action";
-import {
-  ONE_MINUTE_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@common/constants/generic";
 export function getActionQueryKey(actionId: string) {
   return ["action", actionId];
 }
@@ -17,14 +14,14 @@ export const getActionQueryFn = (actionId: string) => {
 
 const useAction = <T = ActionEntity>(
   actionId: string,
-  select?: (data: DocumentData) => T
+  select?: (data: DocumentData) => T,
 ) => {
   return useQuery({
     queryKey: getActionQueryKey(actionId),
     queryFn: getActionQueryFn(actionId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS
+    cacheTime: ONE_DAY_IN_MS,
   });
 };
 

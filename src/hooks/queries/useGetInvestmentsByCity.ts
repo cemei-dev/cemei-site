@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DocumentData } from "firebase/firestore";
 
 import { getInvestmentsByCity } from "@/store/services/investment";
-import {
-  ONE_MINUTE_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@common/constants/generic";
 import type { InvestmentEntity } from "@common/entities/investment";
 
 export function getInvestmentsQueryKey(cityId: string) {
@@ -18,14 +15,14 @@ export const getInvestmentsQueryFn = (cityId: string) => {
 
 const useGetInvestmentsByCity = <T = InvestmentEntity[]>(
   cityId: string,
-  select?: (data: DocumentData) => T
+  select?: (data: DocumentData) => T,
 ) => {
   return useQuery({
     queryKey: getInvestmentsQueryKey(cityId),
     queryFn: getInvestmentsQueryFn(cityId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS
+    cacheTime: ONE_DAY_IN_MS,
   });
 };
 

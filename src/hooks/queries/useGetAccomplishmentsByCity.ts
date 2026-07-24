@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { AccomplishmentEntity } from "@/common/entities/accomplishment";
 import { getAccomplishmentsByCity } from "@/store/services/accomplishment";
-import {
-  ONE_MINUTE_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export function getAccomplishmentQueryKey(cityId: string) {
   return ["accomplishments", cityId];
@@ -18,14 +15,14 @@ export const getAccomplishmentQueryFn = (cityId: string) => {
 
 const useGetAccomplishmentByCity = <T = AccomplishmentEntity[]>(
   cityId: string,
-  select?: (data: DocumentData) => T
+  select?: (data: DocumentData) => T,
 ) => {
   return useQuery({
     queryKey: getAccomplishmentQueryKey(cityId),
     queryFn: getAccomplishmentQueryFn(cityId),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS
+    cacheTime: ONE_DAY_IN_MS,
   });
 };
 

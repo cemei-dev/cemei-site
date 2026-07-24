@@ -10,5 +10,5 @@ export type GoalDTO = Omit<GoalEntity, "id">;
 
 export const nullGoalData: GoalDTO = {
   text: "",
-  educationalAxisId: ""
+  educationalAxisId: "",
 };

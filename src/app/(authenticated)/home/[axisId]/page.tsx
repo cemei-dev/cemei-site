@@ -62,7 +62,7 @@ export default function AxisPage() {
             options={
               allAxis?.map((axis) => ({
                 label: axis.name,
-                value: axis.id
+                value: axis.id,
               })) ?? []
             }
             value={currentAxis?.id || ""}

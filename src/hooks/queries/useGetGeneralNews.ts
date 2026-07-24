@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { DocumentData } from "firebase/firestore";
 
-import {
-  ONE_MINUTE_IN_MS,
-  ONE_DAY_IN_MS
-} from "@/common/constants/generic";
+import { ONE_MINUTE_IN_MS, ONE_DAY_IN_MS } from "@/common/constants/generic";
 import { NewsEntity } from "@/common/entities/news";
 import { getNewsByTarget } from "@/store/services/news";
 
@@ -18,13 +15,13 @@ export const getGeneralNewsQueryFn = (target: string) => {
 
 export const useGetGeneralNews = <T = NewsEntity[]>(
   target: string,
-  select?: (data: DocumentData) => T
+  select?: (data: DocumentData) => T,
 ) => {
   return useQuery({
     queryKey: getGeneralNewsQueryKey(target),
     queryFn: getGeneralNewsQueryFn(target),
     select,
     staleTime: ONE_MINUTE_IN_MS,
-    cacheTime: ONE_DAY_IN_MS
+    cacheTime: ONE_DAY_IN_MS,
   });
 };

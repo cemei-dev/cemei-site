@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { updateGoal } from "@/store/services/goal";
@@ -25,7 +25,7 @@ import TextAreaField from "../TextareaField/textareaField";
 export default function EditGoalModal({
   isOpen,
   setIsOpen,
-  goal
+  goal,
 }: EditGoalModalProps) {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
@@ -34,15 +34,15 @@ export default function EditGoalModal({
     register,
     reset,
     handleSubmit,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<AddGoalForm>({
     mode: "all",
     resolver: zodResolver(AddGoalSchema),
     criteriaMode: "all",
     defaultValues: {
       number: goal.number,
-      text: goal.text
-    }
+      text: goal.text,
+    },
   });
 
   const editMutation = useMutation(
@@ -50,7 +50,7 @@ export default function EditGoalModal({
       try {
         await updateGoal(goal.id, {
           text: data.text,
-          number: data.number
+          number: data.number,
         });
       } catch (error) {
         console.error("Goal update error:", error);
@@ -67,8 +67,8 @@ export default function EditGoalModal({
       },
       onError: () => {
         setLoading(false);
-      }
-    }
+      },
+    },
   );
 
   const onSubmit = (data: AddGoalForm) => {
