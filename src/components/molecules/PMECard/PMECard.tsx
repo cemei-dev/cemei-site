@@ -1,13 +1,18 @@
 import { useState } from "react";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { EducationalAxisEntity } from "@/common/entities/educationalAxis";
 import Button from "@/components/atoms/Button/button";
 import { useAllAxis } from "@/hooks/queries/useAllAxis";
 import { useCityActions } from "@/hooks/queries/useCityActions";
+import { errorToast, successToast } from "@/hooks/useAppToast";
+import { deleteEducationalAxis } from "@/store/services/educationalAxis";
 
 import AxisCard from "../AxisCard/axisCard";
+import { ConfirmationModal } from "../ConfirmationModal/confirmationModal";
 export default function PMECard({
   isEdit,
   cityId
@@ -22,6 +27,23 @@ export default function PMECard({
   const collapsedAxis = axis?.slice(0, 6);
   const { data: actions } = useCityActions(cityId);
   const [isRotating, setIsRotating] = useState(false);
+  const [axisToDelete, setAxisToDelete] = useState<EducationalAxisEntity>();
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+  // ponytail: apaga só o eixo, como o delete de meta já faz — metas do eixo ficam órfãs mas invisíveis (toda query filtra por educationalAxisId)
+  const deleteMutation = useMutation(deleteEducationalAxis, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["educationalAxis"]);
+      successToast("Eixo excluído com sucesso.");
+      setDeleteLoading(false);
+      setAxisToDelete(undefined);
+    },
+    onError: () => {
+      setDeleteLoading(false);
+      errorToast("Erro ao excluir eixo.");
+    }
+  });
 
   const handleViewToggle = () => {
     if (isEdit) {
@@ -63,6 +85,7 @@ export default function PMECard({
                 axis={axis}
                 actions={actions}
                 onClick={() => router.push(`/home/${axis.id}`)}
+                onDelete={() => setAxisToDelete(axis)}
               />
             ))
           : collapsedAxis?.map((axis) => (
@@ -71,6 +94,7 @@ export default function PMECard({
                 axis={axis}
                 actions={actions}
                 onClick={() => router.push(`/home/${axis.id}`)}
+                onDelete={() => setAxisToDelete(axis)}
               />
             ))}
       </div>
@@ -90,6 +114,18 @@ export default function PMECard({
           </div>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={!!axisToDelete}
+        setIsOpen={() => setAxisToDelete(undefined)}
+        loading={deleteLoading}
+        actionLabel="Excluir"
+        title="Excluir eixo"
+        content={`Você tem certeza que deseja excluir o eixo ${axisToDelete?.name}? Essa ação não pode ser desfeita.`}
+        action={() => {
+          setDeleteLoading(true);
+          deleteMutation.mutate(axisToDelete?.id as string);
+        }}
+      />
     </div>
   );
 }

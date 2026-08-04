@@ -22,6 +22,7 @@ import { deleteGoal } from "@/store/services/goal";
 import AddStrategyModal from "../AddStrategyModal/addStrategyModal";
 import { ConfirmationModal } from "../ConfirmationModal/confirmationModal";
 import EditGoalModal from "../EditGoalModal/editGoalModal";
+import GoalDetails from "../GoalDetails/goalDetails";
 import { PieChartComp } from "../PieChart/pieChart";
 import StrategyCard from "../StrategyCard/strategyCard";
 export default function GoalCard({
@@ -126,6 +127,7 @@ export default function GoalCard({
       </div>
       <div className="flex flex-col gap-[67px] rounded-3xl border border-[#BEA7DA] bg-[#F2F2F2] p-14">
         <h4 className="text-2xl">{goal.text}</h4>
+        <GoalDetails goal={goal} />
         <div className="flex w-full items-center justify-between gap-8">
           <div className="flex w-full flex-col gap-4 rounded-3xl border border-[#E4CCDC] bg-[#FCFDFE] px-8 py-[73px]">
             <div className="flex w-full flex-col">

@@ -10,6 +10,7 @@ import { useCityGoalStrategies } from "@/hooks/queries/useAllCityGoalStrategies"
 import { useCityActions } from "@/hooks/queries/useCityActions";
 import { useGoalResults } from "@/hooks/queries/useGoalResults";
 
+import GoalDetails from "../GoalDetails/goalDetails";
 import MoneySort from "../MoneySort/moneySort";
 import { PieChartComp } from "../PieChart/pieChart";
 import PublicResultCard from "../PublicResultCard/publicResultCard";
@@ -134,6 +135,7 @@ export default function PublicGoalCard({
           </h4>
 
           <h4 className="text-2xl">{goal.text}</h4>
+          <GoalDetails goal={goal} />
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-8 lg:flex-row">
           <div className="flex w-full flex-col gap-4 rounded-3xl border border-[#E4CCDC] bg-[#FCFDFE] px-4 py-[73px] lg:px-8">
