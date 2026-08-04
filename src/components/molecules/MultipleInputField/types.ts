@@ -15,6 +15,9 @@ interface MultipleInputFieldProps<T extends FieldValues> {
   placeholder?: string;
   type?: "phone" | "email";
   register: UseFormRegister<T>;
+  addLabel?: string;
+  max?: number;
+  min?: number;
 }
 
 export default MultipleInputFieldProps;

@@ -21,6 +21,9 @@ const MultipleInputField = <T extends FieldValues>({
   placeholder,
   formErrors,
   label,
+  addLabel,
+  max = 3,
+  min = 1,
   ...props
 }: MultipleInputFieldProps<T>) => {
   const { fields, append, remove } = useFieldArray({
@@ -53,7 +56,7 @@ const MultipleInputField = <T extends FieldValues>({
                 )}
               />
             </div>
-            {fields.length > 1 && (
+            {fields.length > min && (
               <div
                 onClick={() => remove(index)}
                 className="mt-1 flex h-9 w-9 transform cursor-pointer items-center justify-center rounded-full bg-intense-purple transition-all duration-300 hover:bg-[#6435AB]"
@@ -65,14 +68,14 @@ const MultipleInputField = <T extends FieldValues>({
         ))}
       </div>
 
-      {fields.length < 3 && (
+      {fields.length < max && (
         <div
           onClick={() => append("" as unknown as T[ArrayPath<T>][number])}
           className="flex w-max transform cursor-pointer items-start gap-1 place-self-end rounded-xl px-2 py-1 transition-all duration-300 hover:bg-gray-200"
         >
           <Plus className="h-5 w-5" color="#8951CF" />
           <p className="text-intense-purple">
-            Adicionar {type === "phone" ? "telefone" : "email"}
+            {addLabel ?? `Adicionar ${type === "phone" ? "telefone" : "email"}`}
           </p>
         </div>
       )}
